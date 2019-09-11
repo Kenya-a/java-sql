@@ -92,29 +92,45 @@ WHERE contact_title LIKE '%MARkET%'
 * the country is 'Middle Earth'
 > This can be done with the INSERT INTO clause
 
-INSERT INTO customers(customer_id, company_name, contact_name, address, city, postal_code, country)
-Valuues('SHIRE', 'The Shire', 'Bilbo Baggings', '1 Hobbit-Hole', 'Bag End', '111', 'Middle Earth')
+INSERT INTO customers
+(customer_id, company_name, contact_name, address, city, postal_code, country)
+Valuues
+('SHIRE', 'The Shire', 'Bilbo Baggings', '1 Hobbit-Hole', 'Bag End', '111', 'Middle Earth')
 
 ### update _Bilbo Baggins_ record so that the postal code changes to _"11122"_.
 > This can be done with UPDATE and WHERE clauses
 
 UPDATE customers
 SET postal_code = '11122'
-WHERE contact_name LIKE '%Bilbo%'
-
+WHERE contact_name = 'Bilbo Baggins'
 
 ### list orders grouped by customer showing the number of orders per customer. _Rattlesnake Canyon Grocery_ should have 18 orders.
 > This can be done with SELECT, COUNT, JOIN and GROUP BY clauses. Your count should focus on a field in the Orders table, not the Customer table
 
 > There is more information about the COUNT clause on [W3 Schools](https://www.w3schools.com/sql/sql_count_avg_sum.asp)
 
+SELECT COUNT(o.customer_id) AS orderCount, c.customer_id, company_name
+FROM orders o JOIN customers c
+ON o.customer_id = c.customer_id
+GROUP BY c.customer_id
+
 
 ### list customers names and the number of orders per customer. Sort the list by number of orders in descending order. _Save-a-lot Markets should be at the top with 31 orders followed by _Ernst Handle_ with 30 orders. Last should be _Centro comercial Moctezuma_ with 1 order.
 > This can be done by adding an ORDER BY clause to the previous answer
 
+SELECT COUNT(o.customer_id) AS orderCount, c.customer_id, company_name
+FROM orders o JOIN customers c
+ON o.customer_id = c.customer_id
+GROUP BY c.customer_id
+ORDER BY orderCount DESC
 
 ### list orders grouped by customer's city showing number of orders per city. Returns 69 Records with _Aachen_ showing 6 orders and _Albuquerque_ showing 18 orders.
 > This is very similar to the previous two queries, however, it focuses on the City rather than the CustomerName
+
+SELECT COUNT(o.customer_id) AS orderCount, c.city
+FROM customers c JOIN orders o
+ON c.customer_id = o.customer_id
+GROUP BY c.city
 
 
 ## Data Normalization
@@ -128,6 +144,26 @@ Take the following data and normalize it into a 3NF database.
 | Jane        | Ellie    | Dog      | Tiger      | Cat        | Toby       | Turtle     | No          | Yes          |
 | Bob         | Joe      | Horse    |            |            |            |            | No          | No           |
 | Sam         | Ginger   | Dog      | Miss Kitty | Cat        | Bubble     | Fish       | Yes         | No           |
+
+
+###Person Table
+
+|Person ID |   Person Name |  Fenced Yard  |   City Dweller |
+|    1     |     Jane      |       No      |         Yes    |
+|    2     |     Bob       |       No      |         No     |
+|    3     |     Sam       |       Yes     |         No     |
+
+###Pet table
+
+|Pet ID|   Person ID     |     PetName  |     Type    |
+|   1  |        1        |       Ellie  |      Dog    |
+|   2  |        1        |       Tiger  |      Cat    |
+|   3  |        1        |       Toby   |      Turtle |
+|   4  |        2        |       Joe    |      Horse  |
+|   5  |        3        |      Ginger  |      Dog    |
+|   6  |        3        |    Miss Kitty|      Cat    |
+|   7  |        3        |    Bubble    |      Fish   |
+
 
 ---
 ## Stretch Goals
